@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.CourseViewToStudentMapper">
+
+
+
+	<select id="selectAllCoursesToStudent"
+		resultMap="courseViewToStudent">
+		SELECT id, name, lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time
+		as sign_in_time,start_time, end_time,count,(case when
+		subscribe.course=course_view.id then 1 else 0 end) as flag,
+		subscribe.sign_in_time as my_sign_in_time
+		FROM
+		course_view left join
+		(SELECT * FROM subscribe WHERE isDelete=0 AND
+		subscribe.student=#{studentOpenId})subscribe
+		ON
+		subscribe.course=course_view.id
+	</select>
+
+	<select id="selectAllEnrollCoursesToStudent"
+		resultMap="courseViewToStudent">
+		SELECT id, name, lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time
+		as sign_in_time,start_time, end_time,count,(case when
+		subscribe.course=course_view.id then 1 else 0 end) as flag,
+		subscribe.sign_in_time as my_sign_in_time
+		FROM
+		course_view join (SELECT
+		* FROM subscribe WHERE isDelete=0 AND
+		subscribe.student=#{studentOpenId})subscribe
+		ON
+		subscribe.course=course_view.id
+
+	</select>
+
+	<select id="selectStudentCourseNotStart"
+		resultMap="courseViewToStudent">
+		SELECT id, name, lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time
+		as sign_in_time,start_time, end_time,count,(case when
+		subscribe.course=course_view.id then 1 else 0 end) as flag,
+		subscribe.sign_in_time as my_sign_in_time
+		FROM
+		course_view join
+		subscribe
+		ON subscribe.isDelete=0 and subscribe.course=course_view.id
+		and
+		subscribe.student=#{studentOpenId} and start_time is null and
+		end_time is null
+	</select>
+
+	<select id="selectStudentCourseIng"
+		resultMap="courseViewToStudent">
+		SELECT id, name, lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time
+		as sign_in_time,start_time, end_time,count,(case when
+		subscribe.course=course_view.id then 1 else 0 end) as flag,
+		subscribe.sign_in_time as my_sign_in_time
+		FROM
+		course_view join
+		subscribe
+		ON subscribe.isDelete=0 and subscribe.course=course_view.id
+		and
+		subscribe.student=#{studentOpenId} and start_time is not null and
+		end_time is null
+	</select>
+
+	<select id="selectStudentCourseEnd"
+		resultMap="courseViewToStudent">
+		SELECT id, name, lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time
+		as sign_in_time,start_time, end_time,count,(case when
+		subscribe.course=course_view.id then 1 else 0 end) as flag,
+		subscribe.sign_in_time as my_sign_in_time
+		FROM
+		course_view join
+		subscribe
+		ON subscribe.isDelete=0 and subscribe.course=course_view.id
+		and
+		subscribe.student=#{studentOpenId} and start_time is not null and
+		end_time is not null
+	</select>
+
+	<select id="selectCourseViewToStudentById"
+		resultMap="courseViewToStudent">
+		SELECT id, name, lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time
+		as sign_in_time,start_time, end_time,count,(case when
+		subscribe.course=course_view.id then 1 else 0 end) as flag,
+		subscribe.sign_in_time as my_sign_in_time
+		FROM
+		(SELECT * FROM
+		course_view WHERE id=#{courseId})course_view left join (SELECT * FROM
+		subscribe WHERE isDelete=0 AND student=#{studentOpenId})subscribe
+		ON
+		subscribe.course=course_view.id
+	</select>
+
+
+
+
+	<resultMap id="courseViewToStudent"
+		type="CourseViewToStudent">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="lecturer_name" property="lecturerName" />
+		<result column="lecturer_avatar" property="lecturerAvatar" />
+		<result column="created_time" property="createdTime" />
+		<result column="planned_start_time" property="plannedStartTime" />
+		<result column="sign_in_time" property="signInTime" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="count" property="count" />
+		<result column="flag" property="flag" />
+		<result column="my_sign_in_time" property="mySignInTime" />
+	</resultMap>
+
+</mapper>

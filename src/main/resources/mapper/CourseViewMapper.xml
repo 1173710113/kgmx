@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.CourseViewMapper">
+
+	<select id="select" resultMap="courseView">
+		SELECT id,
+		name, lecturer_id,lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,sign_in_time,start_time,
+		end_time,count
+		FROM course_view
+		<where>
+			<if test="lecturerId != null">AND lecturer_id=#{lecturerId}</if>
+		</where>
+	</select>
+
+	<select id="selectByTime" resultMap="courseView">
+		SELECT id,
+		name, lecturer_id,lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,sign_in_time,start_time,
+		end_time,count
+		FROM course_view
+		<where>
+			<if test="lecturerId != null">AND lecturer_id=#{lecturerId}</if>
+			<if test="startTime == null">AND start_time IS NULL</if>
+			<if test="startTime != null">AND start_time IS NOT NULL</if>
+			<if test="endTime == null">AND end_time IS NULL</if>
+			<if test="endTime != null">AND end_time IS NOT NULL</if>
+		</where>
+	</select>
+
+	<select id="selectById" resultMap="courseView">
+		SELECT id, name,lecturer_id,
+		lecturer_name,
+		lecturer_avatar,created_time,planned_start_time,sign_in_time,start_time,
+		end_time,count
+		FROM course_view
+		WHERE id=#{courseId}
+	</select>
+
+	<resultMap id="courseView" type="CourseView">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="lecturer_id" property="lecturerId" />
+		<result column="lecturer_name" property="lecturerName" />
+		<result column="lecturer_avatar" property="lecturerAvatar" />
+		<result column="created_time" property="createdTime" />
+		<result column="planned_start_time" property="plannedStartTime" />
+		<result column="sign_in_time" property="signInTime" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="count" property="count" />
+	</resultMap>
+
+</mapper>

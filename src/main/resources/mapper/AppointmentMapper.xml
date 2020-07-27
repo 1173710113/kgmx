@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.AppointmentMapper">
+
+	<insert id="insert">
+		INSERT INTO appointment(student, teacher,
+		student_name, student_job, student_branch, planned_start_time, form)
+		VALUES(#{studentId}, #{teacherId},
+		#{studentName},#{studentJob},#{studentBranch},#{plannedStartTime},#{form})
+	</insert>
+
+	<select id="select" resultMap="appointment">
+		SELECT *
+		FROM appointment
+		<where>
+			<if test="id != null">AND id=#{id}</if>
+			<if test="studentId != null">AND student=#{studentId}</if>
+			<if test="teacherId != null">AND teacher=#{teacherId}</if>
+			<if test="state != null">AND state=#{state}</if>
+			<if test="isDelete != null">AND isDelete=#{isDelete}</if>
+			<if test="isSend != null">AND isSend=#{isSend}</if>
+		</where>
+	</select>
+
+
+	<update id="updateById">
+		UPDATE appointment 
+		<set>
+			<if test="studentSignInTime != null">student_sign_in_time=#{studentSignInTime},</if>
+			<if test="startTime != null">startTime=#{startTime},</if>
+			<if test="endTime != null">endTime=#{endTime},</if>
+			<if test="state != null">state=#{state},</if>
+			<if test="isDelete != null">isDelete=#{isDelete},</if>
+			<if test="isSend != null">isSend=#{isSend},</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+	
+	<update id="update">
+		UPDATE appointment 
+		<set>
+			<if test="appointment.studentSignInTime != null">student_sign_in_time=#{appointment.studentSignInTime},</if>
+			<if test="appointment.startTime != null">startTime=#{appointment.startTime},</if>
+			<if test="appointment.endTime != null">endTime=#{appointment.endTime},</if>
+			<if test="appointment.state != null">state=#{appointment.state},</if>
+			<if test="appointment.isDelete != null">isDelete=#{appointment.isDelete},</if>
+			<if test="appointment.isSend != null">isSend=#{appointment.isSend},</if>
+		</set>
+		<where>
+			<if test="condition.id != null">AND id=#{condition.id}</if>
+			<if test="condition.studentId != null">AND student=#{condition.studentId}</if>
+			<if test="condition.teacherId != null">AND teacher=#{condition.teacherId}</if>
+			<if test="condition.state != null">AND state=#{condition.state}</if>
+			<if test="condition.isDelete != null">AND isDelete=#{condition.isDelete}</if>
+			<if test="condition.isSend != null">AND isSend=#{condition.isSend}</if>
+		</where>
+	</update>
+
+
+	<select id="selectAppointmentToSend" resultMap="appointment">
+		SELECT *
+		FROM appointment
+		WHERE isDelete=0 AND isSend=0 AND state='agree' AND
+		sign_in_time &lt; #{endTime} AND sign_in_time &gt;= #{startTime}
+	</select>
+
+	<select id="selectById" resultMap="appointment">
+		SELECT *
+		FROM
+		appointment
+		WHERE
+		id=#{id}
+	</select>
+
+	<resultMap id="appointment" type="Appointment">
+		<id column="id" property="id" />
+		<result column="student" property="studentId" />
+		<result column="teacher" property="teacherId" />
+		<result column="student_name" property="studentName" />
+		<result column="student_job" property="studentJob" />
+		<result column="student_branch" property="studentBranch" />
+		<result column="planned_start_time" property="plannedStartTime" />
+		<result column="sign_in_time" property="signInTime" />
+		<result column="student_sign_in_time"
+			property="studentSignInTime" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="form" property="form" />
+		<result column="state" property="state" />
+		<result column="isSend" property="isSend"/>
+		<result column="isDelete" property="isDelete" />
+	</resultMap>
+
+</mapper>

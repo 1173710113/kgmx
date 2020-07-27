@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.LecturerMapper">
+
+	<select id="selectById" resultMap="lecturer">
+		SELECT * FROM lecturer WHERE
+		id=#{openId}
+	</select>
+
+	<update id="updateById">
+		UPDATE lecturer
+		<set>
+			<if test="level">level=#{level},</if>
+			<if test="brief">brief=#{brief},</if>
+			<if test="isDelete">isDelete={isDelete},</if>
+		</set>
+		WHERE id=#{openId}
+	</update>
+
+	<delete id="deleteById">
+		DELETE
+		FROM lecturer
+		WHERE id = #{openId}
+	</delete>
+
+	<resultMap id="lecturer" type="Lecturer">
+		<id column="id" property="openId" />
+		<result column="level" property="level" />
+		<result column="brief" property="brief" />
+		<result column="isDelete" property="isDelete" />
+	</resultMap>
+
+
+</mapper>

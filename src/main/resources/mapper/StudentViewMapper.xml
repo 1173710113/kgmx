@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.StudentViewMapper">
+
+	<select id="selectById" resultMap="studentView">
+		SELECT *
+		FROM student_view
+		WHERE open_id=#{openId}
+	</select>
+	
+	<select id="selectAll" resultMap="studentView">
+		SELECT *
+		FROM student_view
+		ORDER BY ISNULL(department_id), department_id
+	</select>
+	
+	<resultMap id="studentView" type="StudentView">
+		<result column="open_id" property="openId"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="gender" property="gender"/>
+		<result column="avatar_url" property="avatarUrl"/>
+		<result column="employee_number" property="employeeNumber"/>
+		<result column="type" property="type"/>
+		<result column="department_id" property="departmentId"/>
+		<result column="department_name" property="departmentName"/>
+	</resultMap>
+	
+</mapper>

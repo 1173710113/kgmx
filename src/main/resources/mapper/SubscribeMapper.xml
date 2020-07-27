@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.SubscribeMapper">
+
+	<insert id="insert">
+		INSERT INTO subscribe
+		(course, student, sign_in_time)
+		VALUES(#{courseId},#{studentOpenId}, #{signInTime})
+	</insert>
+	
+	<update id="updateById">
+		UPDATE subscribe
+		<set>
+			<if test="signInTime != null">signInTime=#{signInTime},</if>
+			<if test="isDelete != null">isDelete=#{isDelete}</if>
+		</set>
+		WHERE course=#{courseId} AND student=#{studentOpenId}
+	</update>
+
+	<select id="selectById" resultMap="subscribe">
+		SELECT *
+		FROM subscribe
+		WHERE course=#{courseId} AND student=#{studentOpenId}
+	</select>
+
+	<select id="selectByCourse" resultMap="subscribe">
+		SELECT *
+		FROM subscribe
+		WHERE course=#{courseId}
+	</select>
+
+	<update id="softDeleteSubscribe">
+		UPDATE subscribe
+		SET isDelete=#{flag}
+		WHERE
+		course=#{courseId} and student=#{studentOpenId}
+	</update>
+
+	<update id="updateSignInTime">
+		UPDATE subscribe
+		SET sign_in_time = #{signInTime}
+		WHERE course=#{courseId} and student=#{studentOpenId}
+	</update>
+	
+	<update id="softDeleteStudentSubscribe">
+		UPDATE subscribe
+		SET isDelete = 1
+		WHERE student = #{studentId}
+	</update>
+	
+	<update id="softDeleteSubscribeByLecturerId">
+		UPDATE subscribe
+		SET isDelete = 1
+		WHERE course IN (SELECT id FROM course WHERE lecturer = #{lecturerId})
+	</update>
+
+
+	<resultMap id="subscribe" type="Subscribe">
+		<result column="course" property="courseId" />
+		<result column="student" property="studentOpenId" />
+		<result column="sign_in_time" property="signInTime" />
+		<result column="isDelete" property="isDelete" />
+	</resultMap>
+
+</mapper>

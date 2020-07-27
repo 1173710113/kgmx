@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.SubscribeViewMapper">
+
+	<select id="selectSubscribeStudent" resultMap="subscribeView">
+		SELECT *
+		FROM subscribe_view
+		WHERE course_id=#{courseId}
+	</select>
+	
+	<select id="selectAll" resultMap="subscribeView">
+		SELECT * 
+		FROM subscribe_view
+	</select>
+	
+	<resultMap id="subscribeView" type="SubscribeView">
+		<result column="course_id" property="courseId"/>
+		<result column="course_name" property="courseName"/>
+		<result column="student_nick_name" property="studentNickName"/>
+		<result column="student_avatar" property="studentAvatar"/>
+		<result column="sign_in_time" property="signInTime"/>
+		<result column="department_id" property="departmentId"/>
+		<result column="department_name" property="departmentName"/>
+		<result column="lecturer_name" property="teacherNickName"/>
+		<result column="start_time" property="startTime"/>
+		<result column="course_total_time" property="courseTotalTime"/>
+		<result column="student_total_time" property="studentTotalTime"/>
+	</resultMap>
+	
+</mapper>

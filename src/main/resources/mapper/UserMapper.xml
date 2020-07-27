@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.UserMapper">
+
+	<insert id="insertUser">
+		INSERT INTO user(open_id,nick_name,gender,avatar_url, session_key)
+		VALUES(#{openId},#{nickName},#{gender},#{avatarUrl}, #{sessionKey})
+	</insert>
+	
+	<update id="updateUserSessionByOpenId">
+		UPDATE user
+		SET session_key=#{sessionKey}
+		WHERE open_id=#{openId}
+	</update>
+	
+	
+	<select id="selectUserByOpenId" resultMap="user">
+		SELECT *
+		FROM user
+		WHERE open_id=#{openId}
+	</select>
+	
+	<select id="selectUserBySessionKey" resultMap="user">
+		SELECT * 
+		FROM user
+		WHERE session_key=#{sessionKey}
+	</select>
+	
+	<update id="updateUserEmployeeNumber">
+		UPDATE user
+		SET employee_number=#{employeeNumber}
+		WHERE open_id=#{openId}
+	</update>
+	
+	<update id="updateNickName">
+		UPDATE user
+		SET nick_name=#{nickName}
+		WHERE open_id=#{openId}
+	</update>
+	
+	<update id="updateUserType">
+		UPDATE user
+		SET type=#{type}
+		WHERE open_id=#{openId}
+	</update>
+	
+	<update id="updateTeacherLevel">
+		UPDATE lecturer
+		SET level=#{level}
+		WHERE id=#{openId}
+	</update>
+	
+	<update id="updateAvatar">
+		UPDATE user
+		SET avatar_url =#{avatarUrl}
+		WHERE open_id=#{openId}
+	</update>
+	
+	
+	<resultMap type="User" id="user">
+		<id column="open_id" property="openId"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="gender" property="gender"/>
+		<result column="avatar_url" property="avatarUrl"/>
+		<result column="session_key" property="sessionKey"/>
+		<result column="employee_number" property="employeeNumber"/>
+		<result column="type" property="type"/>
+		<result column="isDelete" property="isDelete"/>
+	</resultMap>
+
+</mapper>
