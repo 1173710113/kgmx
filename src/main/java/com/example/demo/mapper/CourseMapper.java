@@ -14,6 +14,8 @@ public interface CourseMapper {
 	
 	public Course selectById(String courseId);
 	
+	public List<Course> select(Course condition);
+	
 	public void updateById(Course course);
 	
 	public void update(Course course, Course condition);

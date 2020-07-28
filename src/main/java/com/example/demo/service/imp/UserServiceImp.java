@@ -20,6 +20,7 @@ import com.example.demo.domain.Lecturer;
 import com.example.demo.domain.LecturerView;
 import com.example.demo.domain.Student;
 import com.example.demo.domain.StudentView;
+import com.example.demo.domain.Subscribe;
 import com.example.demo.domain.User;
 import com.example.demo.exception.EmployeeNumberNotSetException;
 import com.example.demo.exception.MyException;
@@ -81,7 +82,7 @@ public class UserServiceImp implements UserService {
 			throw new MyException("签名校验失败");
 		}
 		// 5.根据返回的User实体类，判断用户是否是新用户，是的话，将用户信息存到数据库；不是的话，更新最新登录时间
-		User user = userMapper.selectUserByOpenId(openid);
+		User user = userMapper.selectById(openid, null);
 		// uuid生成唯一key，用于维护微信小程序用户与服务端的会话
 		String skey = UUID.randomUUID().toString();
 		JSONObject result = new JSONObject();
@@ -97,12 +98,12 @@ public class UserServiceImp implements UserService {
 			user.setAvatarUrl(avatarUrl);
 			user.setGender(Integer.parseInt(gender));
 			user.setNickName(nickName);
-			userMapper.insertUser(user);
+			userMapper.insert(user);
 		} else {
 			// 已存在，更新用户登录时间
 			// 重新设置会话skey
 			user.setSessionKey(skey);
-			userMapper.updateUserSessionByOpenId(user.getOpenId(), skey);
+			userMapper.updateById(user);
 		}
 		result.put("type", user.getType());
 		result.put("employeeNumber", user.getEmployeeNumber());
@@ -148,7 +149,8 @@ public class UserServiceImp implements UserService {
 						throw new MyException("管理员密码错误");
 					}
 				}
-				userMapper.updateUserType(user.getOpenId(), type);
+				user.setType(type);
+				userMapper.updateById(user);
 			} else {
 				throw new MyException("角色以绑定，需要修改请联系管理员");
 			}
@@ -160,7 +162,8 @@ public class UserServiceImp implements UserService {
 	@Override
 	public void setEmployeeNumber(User user, String employeeNumber) {
 		if (user.getEmployeeNumber() == null) {
-			userMapper.updateUserEmployeeNumber(user.getOpenId(), employeeNumber);
+			user.setEmployeeNumber(employeeNumber);
+			userMapper.updateById(user);
 		} else {
 			throw new MyException("工号已绑定，需要修改请联系管理员");
 		}
@@ -169,7 +172,7 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public User validateSession(String sessionKey) {
-		User user = userMapper.selectUserBySessionKey(sessionKey);
+		User user = userMapper.selectById(null, sessionKey);
 		if (user == null) {
 			throw new SessionException();
 		}
@@ -221,7 +224,7 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public List<LecturerView> getAllTeacher() {
-		return lecturerViewMapper.selectAll();
+		return lecturerViewMapper.select(new LecturerView());
 	}
 
 	@Override
@@ -235,7 +238,7 @@ public class UserServiceImp implements UserService {
 		if (!type.equals("admin")) {
 			throw new MyException("用户类型错误");
 		}
-		List<StudentView> studentViews = studentViewMapper.selectAll();
+		List<StudentView> studentViews = studentViewMapper.select(new StudentView());
 		log.info(studentViews.toString());
 		Map<String, List<StudentView>> map = new LinkedHashMap<String, List<StudentView>>();
 		for (StudentView studentView : studentViews) {
@@ -277,13 +280,20 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public LecturerView updateTeacherLevel(String teacherId, String level) {
-		userMapper.updateTeacherLevel(teacherId, level);
+		Lecturer lecturer =lecturerMapper.selectById(teacherId);
+		lecturer.setLevel(level);
+		lecturerMapper.updateById(lecturer);
 		return lecturerViewMapper.selectById(teacherId);
 	}
 
 	@Override
 	public void updateEmployeeNumber(String openId, String employeeNumber) {
-		userMapper.updateUserEmployeeNumber(openId, employeeNumber);
+		User user = userMapper.selectById(openId, null);
+		if(user == null || user.getIsDelete()) {
+			throw new MyException("找不到用户");
+		}
+		user.setEmployeeNumber(employeeNumber);
+		userMapper.updateById(user);
 
 	}
 
@@ -299,24 +309,31 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public String updateAvatarUrl(User user, String avatarUrl) {
-		userMapper.updateAvatar(user.getOpenId(), avatarUrl);
+		user.setAvatarUrl(avatarUrl);
+		userMapper.updateById(user);
 		return avatarUrl;
 	}
 
 	@Override
 	public void updateUserName(String openId, String nickName) {
-		userMapper.updateNickName(openId, nickName);
+		User user = userMapper.selectById(openId, null);
+		if(user == null || user.getIsDelete()) {
+			throw new MyException("找不到用户");
+		}
+		user.setNickName(nickName);
+		userMapper.updateById(user);
 	}
 
 	@Override
 	public void changeUserType(String userId, String newType) {
-		User user = userMapper.selectUserByOpenId(userId);
-		if (user == null) {
+		User user = userMapper.selectById(userId, null);
+		if (user == null || user.getIsDelete()) {
 			throw new MyException("用户不存在");
 		}
 		String type = user.getType();
 		if (type == null) {
-			userMapper.updateUserType(userId, type);
+			user.setType(newType);
+			userMapper.updateById(user);
 		} else {
 			if (type.equals(newType)) {
 				return;
@@ -324,19 +341,25 @@ public class UserServiceImp implements UserService {
 			Appointment appointment = new Appointment();
 			Appointment appointmentCon = new Appointment();
 			appointment.setIsDelete(true);
+			
+			Subscribe subscribe = new Subscribe();
+			subscribe.setIsDelete(true);
+			Subscribe subscribeCon = new Subscribe();
 			switch (type) {
 			case "admin":
-				userMapper.updateUserType(userId, newType);
+				user.setType(newType);
+				userMapper.updateById(user);
 				break;
 			case "student":
-				userMapper.updateUserType(userId, newType);
 				studentMapper.deleteById(userId);
 				appointmentCon.setStudentId(userId);
 				appointmentMapper.update(appointment, appointmentCon);
-				subscribeMapper.softDeleteStudentSubscribe(userId);
+				subscribeCon.setStudentOpenId(userId);
+				subscribeMapper.update(subscribe, subscribeCon);
+				user.setType(newType);
+				userMapper.updateById(user);
 				break;
 			case "lecturer":
-				userMapper.updateUserType(userId, newType);
 				lecturerMapper.deleteById(userId);
 				appointmentCon.setTeacherId(userId);
 				appointmentMapper.update(appointment, appointmentCon);
@@ -345,10 +368,30 @@ public class UserServiceImp implements UserService {
 				Course courseCon = new Course();
 				courseCon.setLecturerId(userId);
 				courseMapper.update(course, courseCon);
-				subscribeMapper.softDeleteSubscribeByLecturerId(userId);
+				List<Course> courses = courseMapper.select(courseCon);
+				for(Course item:courses) {
+					subscribeCon.setCourseId(item.getId());
+					subscribeMapper.update(subscribe, subscribeCon);
+				}
+				user.setType(newType);
+				userMapper.updateById(user);
 				break;
 			default:
 				throw new MyException("用户类型错误");
+			}
+			switch (newType) {
+			case User.STUDENT:
+				Student student = new Student();
+				student.setOpenId(userId);
+				studentMapper.insert(student);
+				break;
+			case User.TEACHER:
+				Lecturer lecturer = new Lecturer();
+				lecturer.setOpenId(userId);
+				lecturerMapper.insert(lecturer);
+				break;
+			default:
+				break;
 			}
 		}
 

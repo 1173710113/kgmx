@@ -15,7 +15,7 @@ public interface CourseViewToStudentMapper {
 
 	public List<CourseViewToStudent> selectStudentCourseEnd(String studentOpenId);
 	
-	public CourseViewToStudent selectCourseViewToStudentById(String studentOpenId, String courseId);
+	public CourseViewToStudent selectById(String studentOpenId, String courseId);
 	
 	public List<CourseViewToStudent> selectAllCoursesToStudent(String studentOpenId);
 	

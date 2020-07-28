@@ -9,7 +9,7 @@ import com.example.demo.domain.LecturerView;
 @Mapper
 public interface LecturerViewMapper {
 
-	public List<LecturerView> selectAll();
+	public List<LecturerView> select(LecturerView condition);
 	
 	public LecturerView selectById(String id);
 }

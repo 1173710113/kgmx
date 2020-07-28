@@ -8,8 +8,6 @@ import com.example.demo.domain.SubscribeView;
 
 @Mapper
 public interface SubscribeViewMapper {
-
-	public List<SubscribeView> selectSubscribeStudent(String courseId);
 	
-	public List<SubscribeView> selectAll();
+	public List<SubscribeView> select(SubscribeView condition);
 }

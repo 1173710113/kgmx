@@ -13,11 +13,10 @@ public interface SubscribeMapper {
 	
 	public void updateById(Subscribe subscribe);
 	
+	public void update(Subscribe subscribe, Subscribe condition);
+	
+	public List<Subscribe> select(Subscribe condition);
+	
 	public Subscribe selectById(String courseId, String studentOpenId);
-	
-	public List<Subscribe> selectByCourse(String courseId);
-	
-	public void softDeleteStudentSubscribe(String studentId);
-	
-	public void softDeleteSubscribeByLecturerId(String lecturerId);
+
 }

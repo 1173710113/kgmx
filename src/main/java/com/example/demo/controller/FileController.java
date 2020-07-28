@@ -61,7 +61,7 @@ public class FileController {
 	@RequestMapping("/excel")
 	@ResponseBody
 	public MyResult getExel(HttpServletRequest request, HttpServletResponse response) {
-		EasyExcel.write(avatarPath+"/test.xlsx", SubscribeView.class).sheet("模板").doWrite(mapper.selectAll());
+		EasyExcel.write(avatarPath+"/test.xlsx", SubscribeView.class).sheet("模板").doWrite(mapper.select(new SubscribeView()));
 		File file = new File(avatarPath+"/test.xlsx");
 		try(FileInputStream stream = new FileInputStream(file)){
 			response.setContentType(request.getSession().getServletContext().getMimeType("xlsx"));

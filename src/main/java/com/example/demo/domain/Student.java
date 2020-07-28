@@ -9,5 +9,5 @@ public class Student {
 
 	private String department;
 
-	private Boolean isDelate;
+	private Boolean isDelete;
 }

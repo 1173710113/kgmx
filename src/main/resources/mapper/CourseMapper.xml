@@ -17,6 +17,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE id=#{courseId}
 	</select>
 	
+	<select id="select" resultMap="course">
+		SELECT *
+		FROM course
+		<where>
+			<if test="id != null">AND id=#{id}</if>
+			<if test="lecturerId != null">AND lecturer=#{lecturerId}</if>
+		</where>
+	</select>
+	
 	<update id="updateById">
 		UPDATE course
 		<set>
@@ -36,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</set>
 		<where>
 			<if test="condition.id != null">AND id=#{condition.id}</if>
-			<if test="condition.lecturer != null">AND lecturer=#{condition.lecturer}</if>
+			<if test="condition.lecturerId != null">AND lecturer=#{condition.lecturerId}</if>
 		</where>
 	</update>
 	

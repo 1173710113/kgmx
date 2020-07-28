@@ -14,10 +14,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateById">
 		UPDATE subscribe
 		<set>
-			<if test="signInTime != null">signInTime=#{signInTime},</if>
-			<if test="isDelete != null">isDelete=#{isDelete}</if>
+			<if test="signInTime != null">sign_in_time=#{signInTime},</if>
+			<if test="isDelete != null">isDelete=#{isDelete},</if>
 		</set>
 		WHERE course=#{courseId} AND student=#{studentOpenId}
+	</update>
+	
+	<update id="update">
+		UPDATE subscribe
+		<set>
+			<if test="subscribe.signInTime != null">sign_in_time=#{subscribe.signInTime},</if>
+			<if test="subscribe.isDelete != null">isDelete=#{subscribe.isDelete},</if>
+		</set>
+		<where>
+			<if test="condition.courseId != null">AND course=#{condition.courseId}</if>
+			<if test="condition.studentOpenId != null">AND student=#{condition.studentOpenId}</if>
+		</where>
 	</update>
 
 	<select id="selectById" resultMap="subscribe">
@@ -25,38 +37,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM subscribe
 		WHERE course=#{courseId} AND student=#{studentOpenId}
 	</select>
-
-	<select id="selectByCourse" resultMap="subscribe">
+	
+	<select id="select" resultMap="subscribe">
 		SELECT *
 		FROM subscribe
-		WHERE course=#{courseId}
+		<where>
+			<if test="courseId != null">AND course=#{courseId}</if>
+			<if test="studentOpenId != null">AND student=#{studentOpenId}</if>
+			<if test="isDelete != null">AND isDelete=#{isDelete}</if>
+		</where>
 	</select>
-
-	<update id="softDeleteSubscribe">
-		UPDATE subscribe
-		SET isDelete=#{flag}
-		WHERE
-		course=#{courseId} and student=#{studentOpenId}
-	</update>
-
-	<update id="updateSignInTime">
-		UPDATE subscribe
-		SET sign_in_time = #{signInTime}
-		WHERE course=#{courseId} and student=#{studentOpenId}
-	</update>
-	
-	<update id="softDeleteStudentSubscribe">
-		UPDATE subscribe
-		SET isDelete = 1
-		WHERE student = #{studentId}
-	</update>
-	
-	<update id="softDeleteSubscribeByLecturerId">
-		UPDATE subscribe
-		SET isDelete = 1
-		WHERE course IN (SELECT id FROM course WHERE lecturer = #{lecturerId})
-	</update>
-
 
 	<resultMap id="subscribe" type="Subscribe">
 		<result column="course" property="courseId" />

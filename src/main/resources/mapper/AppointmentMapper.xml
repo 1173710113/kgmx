@@ -30,8 +30,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		UPDATE appointment 
 		<set>
 			<if test="studentSignInTime != null">student_sign_in_time=#{studentSignInTime},</if>
-			<if test="startTime != null">startTime=#{startTime},</if>
-			<if test="endTime != null">endTime=#{endTime},</if>
+			<if test="signInTime != null">sign_in_time=#{signInTime},</if>
+			<if test="startTime != null">start_time=#{startTime},</if>
+			<if test="endTime != null">end_time=#{endTime},</if>
 			<if test="state != null">state=#{state},</if>
 			<if test="isDelete != null">isDelete=#{isDelete},</if>
 			<if test="isSend != null">isSend=#{isSend},</if>
@@ -43,8 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		UPDATE appointment 
 		<set>
 			<if test="appointment.studentSignInTime != null">student_sign_in_time=#{appointment.studentSignInTime},</if>
-			<if test="appointment.startTime != null">startTime=#{appointment.startTime},</if>
-			<if test="appointment.endTime != null">endTime=#{appointment.endTime},</if>
+			<if test="appointment.startTime != null">start_time=#{appointment.startTime},</if>
+			<if test="appointment.endTime != null">end_time=#{appointment.endTime},</if>
 			<if test="appointment.state != null">state=#{appointment.state},</if>
 			<if test="appointment.isDelete != null">isDelete=#{appointment.isDelete},</if>
 			<if test="appointment.isSend != null">isSend=#{appointment.isSend},</if>

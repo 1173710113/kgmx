@@ -86,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		end_time is not null
 	</select>
 
-	<select id="selectCourseViewToStudentById"
+	<select id="selectById"
 		resultMap="courseViewToStudent">
 		SELECT id, name, lecturer_name,
 		lecturer_avatar,created_time,planned_start_time,course_view.sign_in_time

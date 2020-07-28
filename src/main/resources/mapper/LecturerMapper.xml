@@ -5,6 +5,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.example.demo.mapper.LecturerMapper">
 
+
+	<insert id="insert">
+		INSERT INTO lecturer(id)
+		VALUES(#{openId})
+	</insert>
 	<select id="selectById" resultMap="lecturer">
 		SELECT * FROM lecturer WHERE
 		id=#{openId}

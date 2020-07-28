@@ -97,7 +97,13 @@ public class CourseServiceImp implements CourseService {
 
 	@Override
 	public List<SubscribeView> getCourseSubscribe(String courseId) {
-		return subscribeViewMapper.selectSubscribeStudent(courseId);
+		Course course = courseMapper.selectById(courseId);
+		if(course == null || course.getIsDelete()) {
+			throw new MyException("找不到课程");
+		}
+		SubscribeView subscribeView = new SubscribeView();
+		subscribeView.setCourseId(courseId);
+		return subscribeViewMapper.select(subscribeView);
 	}
 
 	@Override
@@ -148,65 +154,6 @@ public class CourseServiceImp implements CourseService {
 	public List<CourseViewToStudent> getCoursesToStudent(User user) {
 		log.info(JSON.toJSONString(courseViewToStudentMapper.selectAllCoursesToStudent(user.getOpenId())));
 		return courseViewToStudentMapper.selectAllCoursesToStudent(user.getOpenId());
-	}
-
-	@Override
-	public void enrollCourse(User user, String courseId) {
-		String type = user.getType();
-		// 验证用户为学生
-		if (type == null || !type.equals("student")) {
-			throw new MyException("用户类型错误");
-		}
-		// 验证是否有这门课
-		Course course = courseMapper.selectById(courseId);
-		if (course == null || course.getIsDelete()) {
-			throw new MyException("找不到这门课");
-		}
-		if (course.getPlannedStartTime().before(new Date())) {
-			throw new MyException("课程已开课，不可预约");
-		}
-		// 验证预约
-		Subscribe subscribe = subscribeMapper.selectById(courseId, user.getOpenId());
-		if (subscribe == null) {
-			subscribe = new Subscribe();
-			subscribe.setCourseId(courseId);
-			subscribe.setStudentOpenId(user.getOpenId());
-			subscribeMapper.insert(subscribe);
-		} else if (subscribe.getIsDelete()) {
-			subscribe.setIsDelete(false);
-			subscribeMapper.updateById(subscribe);
-		} else {
-			throw new MyException("您已预约了该课程");
-		}
-
-	}
-
-	@Override
-	public void dropCourse(User user, String courseId) {
-		String type = user.getType();
-		// 验证用户为学生
-		if (type == null || !type.equals("student")) {
-			throw new MyException("用户类型错误");
-		}
-		// 验证是否有这门课
-		Course course = courseMapper.selectById(courseId);
-		if (course == null || course.getIsDelete()) {
-			throw new MyException("找不到这门课");
-		}
-		if (course.getPlannedStartTime().before(new Date())) {
-			throw new MyException("课程已开课，不可取消预约");
-		}
-		// 验证预约
-		Subscribe subscribe = subscribeMapper.selectById(courseId, user.getOpenId());
-		if (subscribe == null || subscribe.getIsDelete()) {
-			throw new MyException("您未预约该课程");
-		}
-		if (subscribe.getSignInTime() != null) {
-			throw new MyException("您已签到不可取消预约");
-		}
-		subscribe.setIsDelete(true);
-		subscribeMapper.updateById(subscribe);
-
 	}
 
 	@Override
@@ -264,7 +211,7 @@ public class CourseServiceImp implements CourseService {
 		if (course == null || course.getIsDelete()) {
 			throw new MyException("找不到这门课");
 		}
-		return courseViewToStudentMapper.selectCourseViewToStudentById(user.getOpenId(), courseId);
+		return courseViewToStudentMapper.selectById(user.getOpenId(), courseId);
 	}
 
 	@Override

@@ -134,26 +134,6 @@ public class CourseController {
 		return MyResultGenerator.successResult(courseService.endCourse(user, courseId));
 	}
 	
-	@RequestMapping("/enroll")
-	@ResponseBody
-	public MyResult enrollCourse(String sessionKey, String courseId) {
-		User user = userService.validateSession(sessionKey);
-		userService.validateUserEmployeeNumber(user);
-		userService.validateUserType(user);
-		courseService.enrollCourse(user, courseId);
-		return MyResultGenerator.successResult(null);
-	}
-	
-	@RequestMapping("/drop")
-	@ResponseBody
-	public MyResult dropCourse(String sessionKey, String courseId) {
-		User user = userService.validateSession(sessionKey);
-		userService.validateUserEmployeeNumber(user);
-		userService.validateUserType(user);
-		courseService.dropCourse(user, courseId);
-		return MyResultGenerator.successResult(null);
-	}
-	
 	@RequestMapping("/signin")
 	@ResponseBody
 	public MyResult signInCourse(String sessionKey, String courseId) {

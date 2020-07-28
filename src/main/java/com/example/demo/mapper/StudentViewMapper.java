@@ -11,5 +11,5 @@ public interface StudentViewMapper {
 
 	public StudentView selectById(String openId);
 	
-	public List<StudentView> selectAll();
+	public List<StudentView> select(StudentView condition);
 }

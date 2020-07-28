@@ -42,7 +42,7 @@ public class AppointmentServiceImp implements AppointmentService {
 		if (type == null || !type.equals("student")) {
 			throw new MyException("用户类型错误");
 		}
-		User teacher = userMapper.selectUserByOpenId(teacherId);
+		User teacher = userMapper.selectById(teacherId, null);
 		if (teacher == null || teacher.getType() == null || !teacher.getType().equals("lecturer")) {
 			throw new MyException("找不到教师");
 		}

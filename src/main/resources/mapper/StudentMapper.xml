@@ -5,10 +5,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.example.demo.mapper.StudentMapper">
 
+	<insert id="insert">
+		INSERT INTO student 
+		(id)
+		VALUES(#{openId})
+	</insert>
+	
 	<select id="selectById" resultMap="student">
 		SELECT *
 		FROM student
-		WHERE id={id}
+		WHERE id=#{id}
 	</select>
 	
 	<delete id="deleteById">
@@ -20,8 +26,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateById">
 		UPDATE student
 		<set>
-			<if test="department != null">department=#{department}</if>
-			<if test="isDelete != null">isDelete=#{isDelete}</if>
+			<if test="department != null">department=#{department},</if>
+			<if test="isDelete != null">isDelete=#{isDelete},</if>
 		</set>
 		WHERE id=#{openId}
 	</update>

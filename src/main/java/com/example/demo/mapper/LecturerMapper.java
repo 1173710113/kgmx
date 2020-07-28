@@ -6,6 +6,9 @@ import com.example.demo.domain.Lecturer;
 
 @Mapper
 public interface LecturerMapper {
+	
+	
+	public void insert(Lecturer lecturer);
 
 	public void updateById(Lecturer lecturer);
 	

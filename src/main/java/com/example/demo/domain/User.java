@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class User {
+	
+	public static final String ADMIN="admin",STUDENT="student",TEACHER="lecturer";
 
 	private String openId;
 

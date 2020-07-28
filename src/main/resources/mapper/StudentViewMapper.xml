@@ -11,9 +11,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE open_id=#{openId}
 	</select>
 	
-	<select id="selectAll" resultMap="studentView">
+	<select id="select" resultMap="studentView">
 		SELECT *
 		FROM student_view
+		<where>
+			<if test="openId != null">AND open_id=#{openId}</if>
+			<if test="employeeNumber != null">AND employee_number=#{employeeNumber}</if>
+			<if test="departmentId != null">AND departemnt_id=#{departmentId}</if>
+		</where>
 		ORDER BY ISNULL(department_id), department_id
 	</select>
 	

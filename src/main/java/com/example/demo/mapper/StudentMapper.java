@@ -6,6 +6,8 @@ import com.example.demo.domain.Student;
 
 @Mapper
 public interface StudentMapper {
+	
+	public void insert(Student student);
 
 	public Student selectById(String id);
 	

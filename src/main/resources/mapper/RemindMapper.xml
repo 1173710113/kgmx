@@ -23,15 +23,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="courseId != null">AND course=#{courseId}</if>
 			<if test="studentOpenId != null">AND student=#{studentOpenId}</if>
 			<if test="isSend != null">AND isSend=#{isSend}</if>
-			<if test="isDelete != null">AND isDelete=#isDelete}</if> 
+			<if test="isDelete != null">AND isDelete=#{isDelete}</if> 
 		</where>
 	</select>
 	
 	<update id="updateById">
 		UPDATE remind
 		<set>
-			<if test="isSend != null">isSend=#{isSend}</if>
-			<if test="isDelete != null">isDelete=#{isDelete}</if>
+			<if test="isSend != null">isSend=#{isSend},</if>
+			<if test="isDelete != null">isDelete=#{isDelete},</if>
 		</set>
 		WHERE course=#{courseId} AND student=#{studentOpenId}
 	</update>

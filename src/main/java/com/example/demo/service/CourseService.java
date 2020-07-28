@@ -42,10 +42,6 @@ public interface CourseService {
 	
 	public CourseView endCourse(User user, String courseId);
 	
-	public void enrollCourse(User user, String courseId);
-	
-	public void dropCourse(User user, String courseId);
-	
 	public CourseViewToStudent signInCourse(User user, String courseId);
 	
 	public List<CourseViewToStudent> getStudentCourses(User user, String studentId);

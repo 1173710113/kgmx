@@ -5,9 +5,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.example.demo.mapper.LecturerViewMapper">
 
-	<select id="selectAll" resultMap="lecturerView">
+	<select id="select" resultMap="lecturerView">
 		SELECT * 
 		FROM lecturer_view
+		<where>
+			<if test="openId != null">AND open_id=#{openId}</if>
+			<if test="employeeNumber != null">AND employee_number=#{employeeNumber}</if>
+			<if test="level != null">AND level=#{level}</if>
+		</where>
 	</select>
 	
 	<select id="selectById" resultMap="lecturerView">

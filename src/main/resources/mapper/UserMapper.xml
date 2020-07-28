@@ -5,60 +5,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.example.demo.mapper.UserMapper">
 
-	<insert id="insertUser">
+	<insert id="insert">
 		INSERT INTO user(open_id,nick_name,gender,avatar_url, session_key)
 		VALUES(#{openId},#{nickName},#{gender},#{avatarUrl}, #{sessionKey})
 	</insert>
 	
-	<update id="updateUserSessionByOpenId">
-		UPDATE user
-		SET session_key=#{sessionKey}
-		WHERE open_id=#{openId}
-	</update>
-	
-	
-	<select id="selectUserByOpenId" resultMap="user">
+	<select id="selectById" resultMap="user">
 		SELECT *
 		FROM user
-		WHERE open_id=#{openId}
+		<where>
+			<if test="openId != null">AND open_id=#{openId}</if>
+			<if test="sessionKey != null">AND session_key=#{sessionKey}</if>
+		</where>
 	</select>
 	
-	<select id="selectUserBySessionKey" resultMap="user">
-		SELECT * 
-		FROM user
-		WHERE session_key=#{sessionKey}
-	</select>
-	
-	<update id="updateUserEmployeeNumber">
+	<update id="updateById">
 		UPDATE user
-		SET employee_number=#{employeeNumber}
+		<set>
+			<if test="employeeNumber != null">employee_number=#{employeeNumber},</if>
+			<if test="nickName != null">nick_name=#{nickName},</if>
+			<if test="type != null">type=#{type},</if>
+			<if test="avatarUrl != null">avatar_url =#{avatarUrl},</if>
+			<if test="sessionKey != null">session_key=#{sessionKey},</if>
+		</set>
 		WHERE open_id=#{openId}
 	</update>
-	
-	<update id="updateNickName">
-		UPDATE user
-		SET nick_name=#{nickName}
-		WHERE open_id=#{openId}
-	</update>
-	
-	<update id="updateUserType">
-		UPDATE user
-		SET type=#{type}
-		WHERE open_id=#{openId}
-	</update>
-	
-	<update id="updateTeacherLevel">
-		UPDATE lecturer
-		SET level=#{level}
-		WHERE id=#{openId}
-	</update>
-	
-	<update id="updateAvatar">
-		UPDATE user
-		SET avatar_url =#{avatarUrl}
-		WHERE open_id=#{openId}
-	</update>
-	
 	
 	<resultMap type="User" id="user">
 		<id column="open_id" property="openId"/>
